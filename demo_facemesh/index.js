@@ -119,7 +119,7 @@ async function getCoordinates() {
   ctx.drawImage(video, 0, 0, videoWidth, videoHeight, 0, 0, canvas.width, canvas.height);
 
   if (predictions.length > 0) {
-    data = JSON.stringify(predictions[0]['annotations']['leftCheek']);
+    data = JSON.stringify(predictions[0]['annotations']['noseTip']);
   }
 
   return data;
@@ -137,11 +137,11 @@ async function renderPrediction() {
     // document.getElementById("stats").innerHTML(stat)
     // console.log("helo dinesh")
    // stat1 = predictions
- let data = JSON.stringify(predictions[0]['annotations']['silhouette']);
+ //let data = JSON.stringify(predictions[0]['annotations']['noseTip']);
 
  // setTimeout( console.log(predictions[0]) , 100000);
 
-  document.getElementById('mydiv').innerHTML = data;
+  //document.getElementById('mydiv').innerHTML = data;
 
 
     predictions.forEach((prediction) => {
@@ -193,6 +193,13 @@ async function renderPrediction() {
   requestAnimationFrame(renderPrediction);
 };
 
+function clearBox()
+{
+  const prevData = document.getElementById("printNodes");
+
+  prevData.innerHTML = "";
+
+}
 
 async function main() {
   await tf.setBackend(state.backend);
@@ -241,6 +248,17 @@ async function main() {
 
     prevData.insertAdjacentHTML( 'beforeend', innerHTML );
   });
+
+  document.getElementById("clearNodes").addEventListener("click", async function(){
+    //console.log("hello")
+    const prevData = document.getElementById("printNodes");
+    //console.log("hello",prevData)
+    prevData.innerHTML = "";
+
+  });
+
+
+  
 };
 
 main();
