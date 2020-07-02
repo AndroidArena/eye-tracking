@@ -29,9 +29,6 @@ tfjsWasm.setWasmPath(
     `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${
         version}/dist/tfjs-backend-wasm.wasm`);
 
-
-
-
 function isMobile() {
   const isAndroid = /Android/i.test(navigator.userAgent);
   const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -64,7 +61,7 @@ const stats = new Stats();
 const state = {
   backend: 'wasm',
   maxFaces: 1,
-  triangulateMesh: true
+  triangulateMesh: true,
 };
 
 if (renderPointcloud) {
@@ -74,18 +71,18 @@ if (renderPointcloud) {
 function setupDatGui() {
   const gui = new dat.GUI();
   gui.add(state, 'backend', ['wasm', 'webgl', 'cpu'])
-      .onChange(async backend => {
+      .onChange(async (backend) => {
         await tf.setBackend(backend);
       });
 
-  gui.add(state, 'maxFaces', 1, 20, 1).onChange(async val => {
+  gui.add(state, 'maxFaces', 1, 20, 1).onChange(async (val) => {
     model = await facemesh.load({maxFaces: val});
   });
 
   gui.add(state, 'triangulateMesh');
 
   if (renderPointcloud) {
-    gui.add(state, 'renderPointcloud').onChange(render => {
+    gui.add(state, 'renderPointcloud').onChange((render) => {
       document.querySelector('#scatter-gl-container').style.display =
           render ? 'inline-block' : 'none';
     });
@@ -102,7 +99,7 @@ async function setupCamera() {
       // Only setting the video to a specified size in order to accommodate a
       // point cloud, so on mobile devices accept the default size.
       width: mobile ? undefined : VIDEO_SIZE,
-      height: mobile ? undefined : VIDEO_SIZE
+      height: mobile ? undefined : VIDEO_SIZE,
     },
   });
   video.srcObject = stream;
@@ -114,6 +111,19 @@ async function setupCamera() {
   });
 }
 
+async function getCoordinates() {
+  stats.begin();
+  let data;
+
+  const predictions = await model.estimateFaces(video);
+  ctx.drawImage(video, 0, 0, videoWidth, videoHeight, 0, 0, canvas.width, canvas.height);
+
+  if (predictions.length > 0) {
+    data = JSON.stringify(predictions[0]['annotations']['leftCheek']);
+  }
+
+  return data;
+}
 
 async function renderPrediction() {
   stats.begin();
@@ -123,26 +133,26 @@ async function renderPrediction() {
       video, 0, 0, videoWidth, videoHeight, 0, 0, canvas.width, canvas.height);
 
   if (predictions.length > 0) {
-    //var stat = JSON.stringify(predictions)
-    //document.getElementById("stats").innerHTML(stat)
-    //console.log("helo dinesh")
+    // var stat = JSON.stringify(predictions)
+    // document.getElementById("stats").innerHTML(stat)
+    // console.log("helo dinesh")
    // stat1 = predictions
- var data = JSON.stringify(predictions[0]["annotations"]['silhouette'])
- 
- //setTimeout( console.log(predictions[0]) , 100000);
- 
-  document.getElementById("mydiv").innerHTML = data
+ let data = JSON.stringify(predictions[0]['annotations']['silhouette']);
+
+ // setTimeout( console.log(predictions[0]) , 100000);
+
+  document.getElementById('mydiv').innerHTML = data;
 
 
-    predictions.forEach(prediction => {
+    predictions.forEach((prediction) => {
       const keypoints = prediction.scaledMesh;
 
       if (state.triangulateMesh) {
         for (let i = 0; i < TRIANGULATION.length / 3; i++) {
           const points = [
             TRIANGULATION[i * 3], TRIANGULATION[i * 3 + 1],
-            TRIANGULATION[i * 3 + 2]
-          ].map(index => keypoints[index]);
+            TRIANGULATION[i * 3 + 2],
+          ].map((index) => keypoints[index]);
 
           drawPath(ctx, points, true);
         }
@@ -159,9 +169,9 @@ async function renderPrediction() {
     });
 
     if (renderPointcloud && state.renderPointcloud && scatterGL != null) {
-      const pointsData = predictions.map(prediction => {
+      const pointsData = predictions.map((prediction) => {
         let scaledMesh = prediction.scaledMesh;
-        return scaledMesh.map(point => ([-point[0], -point[1], -point[2]]));
+        return scaledMesh.map((point) => ([-point[0], -point[1], -point[2]]));
       });
 
       let flattenedPointsData = [];
@@ -183,11 +193,12 @@ async function renderPrediction() {
   requestAnimationFrame(renderPrediction);
 };
 
+
 async function main() {
   await tf.setBackend(state.backend);
   setupDatGui();
 
-  stats.showPanel(0);  // 0: fps, 1: ms, 2: mb, 3+: custom
+  stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
   document.getElementById('main').appendChild(stats.dom);
 
   await setupCamera();
@@ -220,13 +231,16 @@ async function main() {
     scatterGL = new ScatterGL(
         document.querySelector('#scatter-gl-container'),
         {'rotateOnStart': false, 'selectEnabled': false});
-    
-    
-
-    
   }
 
+  document.getElementById("captureNodes").addEventListener("click", async function(){
+    const _data = await getCoordinates();
 
+    const prevData = document.getElementById("printNodes");
+    const innerHTML = "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + _data + "</div>";
+
+    prevData.insertAdjacentHTML( 'beforeend', innerHTML );
+  });
 };
 
 main();
