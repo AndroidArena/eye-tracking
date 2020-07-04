@@ -113,17 +113,32 @@ async function setupCamera() {
 
 async function getCoordinates() {
   stats.begin();
-  let data;
-
+  let data,val;
+  let midwaydata,noseleft,noseBottom,noseright,nosetip;
   const predictions = await model.estimateFaces(video);
   ctx.drawImage(video, 0, 0, videoWidth, videoHeight, 0, 0, canvas.width, canvas.height);
 
   if (predictions.length > 0) {
-    data = JSON.stringify(predictions[0]['annotations']['noseTip']);
-  }
+    //data = JSON.stringify(predictions[0]['annotations']['noseTip']);
+    midwaydata = JSON.stringify(predictions[0]['annotations']['midwayBetweenEyes']);
+    noseBottom = JSON.stringify(predictions[0]['annotations']['noseBottom']);
+    noseleft = JSON.stringify(predictions[0]['annotations']['noseLeftCorner']);
+    noseright = JSON.stringify(predictions[0]['annotations']['noseRightCorner']);
+    nosetip = JSON.stringify(predictions[0]['annotations']['noseTip']);
+    data = "<br> eye midway=>"+midwaydata + "<br>Nose bottom =>"+ noseBottom +"<br> Nose left=> "+ noseleft +"<br> Nose Right=>"+ noseright +"<br> NoseTip=>"+nosetip
+    //data = data + " NoseTip==>\n\n"+ data1
 
+   // let data = JSON.stringify(predictions[0]['annotations']['noseTip']);
+
+    // setTimeout( console.log(predictions[0]) , 100000);
+ 
+    
+  }
+ 
   return data;
 }
+
+let val;
 
 async function renderPrediction() {
   stats.begin();
@@ -137,12 +152,24 @@ async function renderPrediction() {
     // document.getElementById("stats").innerHTML(stat)
     // console.log("helo dinesh")
    // stat1 = predictions
- //let data = JSON.stringify(predictions[0]['annotations']['noseTip']);
+// console.log("helloooo")
+   val = predictions[0]['annotations']['noseBottom'][0][0]
+   //console.log(typeof val)
+    if( typeof val === "number"){
 
- // setTimeout( console.log(predictions[0]) , 100000);
-
-  //document.getElementById('mydiv').innerHTML = data;
-
+      if(Math.floor(val)>200 && Math.floor(val)<400){
+      document.getElementById('mydiv').innerHTML ="Focused " + val;
+  
+     }
+     else if(Math.floor(val)>410){
+      document.getElementById('mydiv').innerHTML ="Not Focused"+val ;
+  
+     }
+     else{
+      document.getElementById('mydiv').innerHTML ="Not Focused==>" +val ;
+  
+     }
+    }
 
     predictions.forEach((prediction) => {
       const keypoints = prediction.scaledMesh;
@@ -242,7 +269,10 @@ async function main() {
 
   document.getElementById("captureNodes").addEventListener("click", async function(){
     const _data = await getCoordinates();
+    if (typeof _data==="undefined"){
 
+      document.getElementById('mydiv').innerHTML ="NOt on screen";
+     }
     const prevData = document.getElementById("printNodes");
     const innerHTML = "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + _data + "</div>";
 
