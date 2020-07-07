@@ -114,18 +114,24 @@ async function setupCamera() {
 async function getCoordinates() {
   stats.begin();
   let data,val;
-  let midwaydata,lipsUpperOuter,rightCheek,nosetip;
+  let midwaydata,noseleft,noseBottom,noseright,nosetip;
   const predictions = await model.estimateFaces(video);
   ctx.drawImage(video, 0, 0, videoWidth, videoHeight, 0, 0, canvas.width, canvas.height);
-//TODO for testing purpose only
+
   if (predictions.length > 0) {
-    //data = JSON.stringify(predictions[0]['annotations']['noseTip']);
-    midwaydata = JSON.stringify(predictions[0]['annotations']['noseTip']);
-    //rightCheek = JSON.stringify(predictions[0]['annotations']['rightCheek']);
-    //lipsUpperOuter = JSON.stringify(predictions[0]['annotations']['lipsUpperOuter']);
-    //nosetip = JSON.stringify(predictions[0]['annotations']['noseTip']);
-    //data = "<br> eye midway=>"+midwaydata + "<br>Right Cheek =>"+ rightCheek +"<br> LipsUpperOuter=> "+ lipsUpperOuter  +"<br> NoseTip=>"+nosetip
-    data = midwaydata
+    midwaydata = JSON.stringify(predictions[0]['annotations']['leftCheek']);
+    noseBottom = JSON.stringify(predictions[0]['annotations']['leftEyeLower0']);
+    noseleft = JSON.stringify(predictions[0]['annotations']['leftEyebrowLower']);
+    noseright = JSON.stringify(predictions[0]['annotations']['rightCheek']);
+    nosetip = JSON.stringify(predictions[0]['annotations']['lipsUpperOuter']);
+
+    // midwaydata = JSON.stringify(predictions[0]['annotations']['midwayBetweenEyes']);
+    // noseBottom = JSON.stringify(predictions[0]['annotations']['noseBottom']);
+    // noseleft = JSON.stringify(predictions[0]['annotations']['noseLeftCorner']);
+    // noseright = JSON.stringify(predictions[0]['annotations']['noseRightCorner']);
+    // nosetip = JSON.stringify(predictions[0]['annotations']['noseTip']);
+     data = "<br>leftCheek=>"+midwaydata + "<br>leftEyeLower0 =>"+ noseBottom +"<br> leftEyebrowLower=> "+ noseleft +"<br>rightCheek=>"+ noseright +"<br> lipsUpperOuter=>"+nosetip
+    //data = data + " NoseTip==>\n\n"+ data1
 
    // let data = JSON.stringify(predictions[0]['annotations']['noseTip']);
 
@@ -137,15 +143,7 @@ async function getCoordinates() {
   return data;
 }
 
-// threshold datapoints
-// const NOSETIP_THRESHOLD_UPPER=400;
-// const NOSETIP_THRESHOLD_LOWER = 200; 
-// const RIGHTCHEEK_THRESHOLD_UPPER=269;
-// const RIGHTCHEEK_THRESHOLD_LOWER=170;  
-// const midwayBetweenEyes_LOWER=200;
-// const midwayBetweenEyes_UPPER=309;  
-// const LIPOUTER_THRESHOLD_UPPER=300;
-// const LIPOUTER_THRESHOLD_LOWER=200;  
+let val;
 const NOSETIP_THRESHOLD_UPPER=400;
 
 const NOSETIP_THRESHOLD_LOWER = 200;
@@ -153,12 +151,6 @@ const RIGHTCHEEK_THRESHOLD_UPPER=350;
 const RIGHTCHEEK_THRESHOLD_LOWER=160;
 const LIPOUTER_THRESHOLD_UPPER=245;
 const LIPOUTER_THRESHOLD_LOWER=230;
-const NOSETIP_VERTICLE_LOWER = 290;
-const NOSETIP_VERTICLE_UPPER = 350;
-const midwayBetweenEyes_LOWER=200;
-const midwayBetweenEyes_UPPER=309;
-
-
 async function renderPrediction() {
   stats.begin();
 
@@ -167,102 +159,112 @@ async function renderPrediction() {
       video, 0, 0, videoWidth, videoHeight, 0, 0, canvas.width, canvas.height);
 
   if (predictions.length > 0) {
-    let positive =0;
-    let negative =0;
-       let noseTip_x_dpoint = predictions[0]['annotations']['noseTip'][0][0]
-        if( typeof noseTip_x_dpoint === "number"){
-    
-          if(Math.floor(noseTip_x_dpoint)>NOSETIP_THRESHOLD_LOWER && Math.floor(noseTip_x_dpoint)<NOSETIP_THRESHOLD_UPPER){
-            positive +=1;
-      
-         }
-         else if(Math.floor(noseTip_x_dpoint)>NOSETIP_THRESHOLD_UPPER){
-          negative +=1;
-      
-         }
-         else{
-          negative +=1;      
-         }
-        }
-    
-        let rightCheek_x_dpoints = predictions[0]['annotations']['rightCheek'][0][0]
-         if( typeof rightCheek_x_dpoints === "number"){
-     
-           if(Math.floor(rightCheek_x_dpoints)>RIGHTCHEEK_THRESHOLD_LOWER && Math.floor(rightCheek_x_dpoints)<RIGHTCHEEK_THRESHOLD_UPPER){
-           positive +=1;
-    
-          }
-          else if(Math.floor(rightCheek_x_dpoints)>NOSETIP_THRESHOLD_UPPER){
-          negative +=1;
-    
-          }
-          else{
-         negative +=1;
-    
-          }
-         }
-    
-         let lipsUpperOuter_x_dpoints = predictions[0]['annotations']['lipsUpperOuter'][0][0]
-          if( typeof lipsUpperOuter_x_dpoints === "number"){
-      
-            if(Math.floor(lipsUpperOuter_x_dpoints)>LIPOUTER_THRESHOLD_LOWER && Math.floor(lipsUpperOuter_x_dpoints)<LIPOUTER_THRESHOLD_UPPER){
-            positive +=1;
-     
-           }
-           else if(Math.floor(lipsUpperOuter_x_dpoints)>LIPOUTER_THRESHOLD_UPPER){
-           negative +=1;
-     
-           }
-           else{
-          negative +=1;
-     
-           }
-          }
-    
-          let noseTip_y_dpoints = predictions[0]['annotations']['noseTip'][0][1]
-          if( typeof noseTip_y_dpoints === "number"){
-      
-            if(Math.floor(noseTip_y_dpoints)>290 && Math.floor(noseTip_y_dpoints)<400){
-            negative +=1;
-     
-           }
-           else{
-          positive +=1;
-     
-           }
-          }
+    // var stat = JSON.stringify(predictions)
+    // document.getElementById("stats").innerHTML(stat)
+    // console.log("helo dinesh")
+   // stat1 = predictions
+// console.log("helloooo")
+let positive =0;
+let negative =0;
+   let val = predictions[0]['annotations']['noseTip'][0][0]
+   //console.log(typeof val)
+    if( typeof val === "number"){
 
-          let midwayBetweenEyes_y_dpoints = predictions[0]['annotations']['midwayBetweenEyes'][0][1]
-           if( typeof midwayBetweenEyes_y_dpoints === "number"){
-       
-             if((Math.floor(midwayBetweenEyes_y_dpoints)>210 && Math.floor(midwayBetweenEyes_y_dpoints)<250) || 
-             (Math.floor(midwayBetweenEyes_y_dpoints)>340 && Math.floor(midwayBetweenEyes_y_dpoints)<400)){
-             negative +=1;
-      
-            }else{
-              positive +=1;
-            }
-          
-           }
-
-
-      if(positive>negative){
-        const innerHTML2 = "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "Focused" + "</div>";
-       document.getElementById('mydiv').innerHTML =innerHTML2;
+      if(Math.floor(val)>NOSETIP_THRESHOLD_LOWER && Math.floor(val)<NOSETIP_THRESHOLD_UPPER){
+        positive +=1;
+      //document.getElementById('mydiv').innerHTML ="Focused " + val;
   
-       }else{
-        const innerHTML3 = "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "NotFocused" + "</div>";
+     }
+     else if(Math.floor(val)>NOSETIP_THRESHOLD_UPPER){
+      negative +=1;
+     // document.getElementById('mydiv').innerHTML ="Not Focused"+val ;
   
-        document.getElementById('mydiv').innerHTML =innerHTML3;
-  
-      // }
+     }
+     else{
+      negative +=1;
 
+     // document.getElementById('mydiv').innerHTML ="Not Focused==>" +val ;
+  
+     }
     }
 
-     
-    
-    
-     predictions.forEach((prediction) => {
+    let val1 = predictions[0]['annotations']['rightCheek'][0][0]
+    //console.log(typeof val)
+     if( typeof val1 === "number"){
+ 
+       if(Math.floor(val1)>RIGHTCHEEK_THRESHOLD_LOWER && Math.floor(val1)<RIGHTCHEEK_THRESHOLD_UPPER){
+       //document.getElementById('mydiv').innerHTML ="Focused " + val;
+       positive +=1;
+
+      }
+      else if(Math.floor(val1)>NOSETIP_THRESHOLD_UPPER){
+      // document.getElementById('mydiv').innerHTML ="Not Focused"+val ;
+      negative +=1;
+
+      }
+      else{
+     //  document.getElementById('mydiv').innerHTML ="Not Focused==>" +val ;
+     negative +=1;
+
+      }
+     }
+
+     let val2 = predictions[0]['annotations']['lipsUpperOuter'][0][0]
+     //console.log(typeof val)
+      if( typeof val2 === "number"){
+  
+        if(Math.floor(val2)>LIPOUTER_THRESHOLD_LOWER && Math.floor(val2)<LIPOUTER_THRESHOLD_UPPER){
+        //document.getElementById('mydiv').innerHTML ="Focused " + val;
+        positive +=1;
+ 
+       }
+       else if(Math.floor(val2)>LIPOUTER_THRESHOLD_UPPER){
+       // document.getElementById('mydiv').innerHTML ="Not Focused"+val ;
+       negative +=1;
+ 
+       }
+       else{
+      //  document.getElementById('mydiv').innerHTML ="Not Focused==>" +val ;
+      negative +=1;
+ 
+       }
+      }
+
+      //checking vertically for up and down
+      let val3 = predictions[0]['annotations']['noseTip'][0][1]
+     //console.log(typeof val)
+      if( typeof val3 === "number"){
+  
+        if(Math.floor(val3)>290 && Math.floor(val3)<380){
+        //document.getElementById('mydiv').innerHTML ="Focused " + val3;
+        positive +=1;
+ 
+       }
+      //  else if(Math.floor(val3)>380){
+      //  // document.getElementById('mydiv').innerHTML ="Not Focused"+val3 ;
+      //  negative +=1;
+ 
+      //  }
+       else{
+       // document.getElementById('mydiv').innerHTML ="Not Focused==>" +val3 ;
+      negative +=1;
+ 
+       }
+      }
+
+     if(positive>negative){
+
+      const innerHTML1 = "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "Focused" + "</div>";
+
+     document.getElementById('mydiv').innerHTML =innerHTML1;
+
+     }else{
+      const innerHTML2 = "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "NotFocused" + "</div>";
+
+      document.getElementById('mydiv').innerHTML =innerHTML2;
+
+     }
+    predictions.forEach((prediction) => {
       const keypoints = prediction.scaledMesh;
 
       if (state.triangulateMesh) {
