@@ -1,15 +1,6 @@
-# eye-tracking
- eye tracking project Team 
- 
- Dinesh 
- 
- Pranil
- 
- Kirti
- 
- Nandini
+# Custom FaceMesh - Implementation 
 
-1.donwload and install node.js 
+1.Download and install node.js 
 
 2. clone this repo
 
