@@ -117,8 +117,9 @@ async function getCoordinates() {
   let midwaydata,lipsUpperOuter,rightCheek,nosetip;
   const predictions = await model.estimateFaces(video);
   ctx.drawImage(video, 0, 0, videoWidth, videoHeight, 0, 0, canvas.width, canvas.height);
-//TODO for testing purpose only
+
   if (predictions.length > 0) {
+     //TODO for testing purpose only -
     //data = JSON.stringify(predictions[0]['annotations']['noseTip']);
    let head = JSON.stringify(predictions[0]['mesh'][10]);
     let rightchek = JSON.stringify(predictions[0]['mesh'][454]);
@@ -135,37 +136,13 @@ async function getCoordinates() {
     //nosetip = JSON.stringify(predictions[0]['annotations']['noseTip']);
     //data = "<br> eye midway=>"+midwaydata + "<br>Right Cheek =>"+ rightCheek +"<br> LipsUpperOuter=> "+ lipsUpperOuter  +"<br> NoseTip=>"+nosetip
     //data = "head\n"+head +"\n rightcheek"+ rightchek+"\n lefcheek "+leftcheek+" \nchin==>"+chin
-data = chin
-   // let data = JSON.stringify(predictions[0]['annotations']['noseTip']);
-
-    // setTimeout( console.log(predictions[0]) , 100000);
- 
+    data = chin
+  
     
   }
  
   return data;
 }
-
-// threshold datapoints
-// const NOSETIP_THRESHOLD_UPPER=400;
-// const NOSETIP_THRESHOLD_LOWER = 200; 
-// const RIGHTCHEEK_THRESHOLD_UPPER=269;
-// const RIGHTCHEEK_THRESHOLD_LOWER=170;  
-// const midwayBetweenEyes_LOWER=200;
-// const midwayBetweenEyes_UPPER=309;  
-// const LIPOUTER_THRESHOLD_UPPER=300;
-// const LIPOUTER_THRESHOLD_LOWER=200;  
-// const NOSETIP_THRESHOLD_UPPER=400;
-
-// const NOSETIP_THRESHOLD_LOWER = 200;
-// const RIGHTCHEEK_THRESHOLD_UPPER=350;
-// const RIGHTCHEEK_THRESHOLD_LOWER=160;
-// const LIPOUTER_THRESHOLD_UPPER=245;
-// const LIPOUTER_THRESHOLD_LOWER=230;
-// const NOSETIP_VERTICLE_LOWER = 290;
-// const NOSETIP_VERTICLE_UPPER = 350;
-// const midwayBetweenEyes_LOWER=200;
-// const midwayBetweenEyes_UPPER=309;
 
 
 async function renderPrediction() {
@@ -180,79 +157,6 @@ async function renderPrediction() {
   if (predictions.length > 0) {
     let positive =0;
     let negative =0;
-
-
-          // let head = JSON.stringify(predictions[0]['mesh'][10][0]);
-
-        // let leftcheekY = JSON.stringify(predictions[0]['mesh'][234][1]);
-       //  let leftcheekZ = JSON.stringify(predictions[0]['mesh'][234][2]);
-// let rightchekY = JSON.stringify(predictions[0]['mesh'][454][1]);
-       //  let  chin = JSON.stringify(predictions[0]['mesh'][152][0]);
-       //  let  chinY = JSON.stringify(predictions[0]['mesh'][152][1]);
-       //  let  nose = JSON.stringify(predictions[0]['mesh'][100]);
-       // let  midwaydata = JSON.stringify(predictions[0]['annotations']['midwayBetweenEyes']);
-
-
-          // let head = predictions[0]['annotations']['midwayBetweenEyes'][0][1]
-          
-       
-          //    if((Math.floor(head)>65 && Math.floor(head)<125 )){
-          //    positive +=1;
-      
-          //   }else{
-          //     negative +=1;
-          //   }
-          
-           
-
-           
-       
-          //   if(Math.floor(rightchek)>100 && Math.floor(rightchekY)<110 ){
-          //   negative +=1;
-     
-          //  }else{
-          //    positive +=1;
-          //  }
-         
-          
-
-         
-       
-            
-         
-          
-
-         
-       
-          //   if((Math.floor(chin)<100 && Math.floor(chinY)>150)|| Math.abs(chinZ)>30  ){
-          //   negative +=1;
-     
-          //  }else{
-          //    positive +=1;
-          //  }
-         
-
-          //  if((Math.abs(leftcheekZ)<30 && Math.abs(leftcheekZ)>90) ){
-          //   negative +=1;
-     
-          //  }else{
-          //    positive +=1;
-          //  }
-
-          //  if((Math.floor(nose)<50 || Math.floor(nose)>100) ){
-          //   negative +=1;
-     
-          //  }else{
-          //    positive +=1;
-          //  }
-
-
-          //  if(Math.floor(leftcheek)<30 || Math.floor(leftcheekY)>55 ){
-          //   negative +=1;
-     
-          //  }else{
-          //    negative +=1;
-          //  }
 
           let headz= JSON.stringify(predictions[0]['mesh'][10][2]);
           let rightchek = JSON.stringify(predictions[0]['mesh'][454][0]);
@@ -322,44 +226,30 @@ async function renderPrediction() {
       
             document.getElementById('mydiv').innerHTML =innerHTML3;
 
-      // if(positive>negative){
-      //   const innerHTML2 = "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "Focused" + "</div>";
-      //  document.getElementById('mydiv').innerHTML =innerHTML2;
-  
-      //  }else{
-      //   const innerHTML3 = "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "NotFocused" + "</div>";
-  
-      //   document.getElementById('mydiv').innerHTML =innerHTML3;
-  
-      
+     
 
     }
 
      
     
-    
+    //show Retina Dots.
      predictions.forEach((prediction) => {
       const keypoints = prediction.scaledMesh;
 
-      if (state.triangulateMesh) {
-        for (let i = 0; i < TRIANGULATION.length / 3; i++) {
-          const points = [
-            TRIANGULATION[i * 3], TRIANGULATION[i * 3 + 1],
-            TRIANGULATION[i * 3 + 2],
-          ].map((index) => keypoints[index]);
-
-          drawPath(ctx, points, true);
-        }
-      } else {
-        for (let i = 0; i < keypoints.length; i++) {
-          const x = keypoints[i][0];
-          const y = keypoints[i][1];
+          const left_x = keypoints[259][0];
+          const left_y = keypoints[259][1];
 
           ctx.beginPath();
-          ctx.arc(x, y, 1 /* radius */, 0, 2 * Math.PI);
+          ctx.arc(left_x, left_y, 2 /* radius */, 0, 2 * Math.PI);
           ctx.fill();
-        }
-      }
+
+          const right_x = keypoints[28][0];
+          const right_y = keypoints[28][1];
+
+          ctx.beginPath();
+          ctx.arc(right_x, right_y, 2 /* radius */, 0, 2 * Math.PI);
+          ctx.fill();
+       
     });
 
     if (renderPointcloud && state.renderPointcloud && scatterGL != null) {
@@ -438,7 +328,7 @@ async function main() {
     const _data = await getCoordinates();
     if (typeof _data==="undefined"){
 
-      document.getElementById('mydiv').innerHTML ="NOt on screen";
+      document.getElementById('mydiv').innerHTML ="Not on screen";
      }
     const prevData = document.getElementById("printNodes");
     const innerHTML = "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + _data + "</div>";
@@ -447,9 +337,7 @@ async function main() {
   });
 
   document.getElementById("clearNodes").addEventListener("click", async function(){
-    //console.log("hello")
     const prevData = document.getElementById("printNodes");
-    //console.log("hello",prevData)
     prevData.innerHTML = "";
 
   });
