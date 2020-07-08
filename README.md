@@ -1,5 +1,13 @@
 # eye-tracking
-ineuron eye tracking project Team 
+ eye tracking project Team 
+ 
+ Dinesh 
+ 
+ Pranil
+ 
+ Kirti
+ 
+ Nandini
 
 1.donwload and install node.js 
 
