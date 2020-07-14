@@ -2,8 +2,8 @@ normal
 moving head left
 moving head right
 moving both shoulder left + right = both
-moving right shoulder
-moving left shoulder
+moving right shoulder streching
+moving left shoulder streching
 bodybuilding
 talking on phone right
 touching ears till 30 count if exceeds it means talking on phone
