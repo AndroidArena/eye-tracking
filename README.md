@@ -1,7 +1,6 @@
-# eye-tracking
-ineuron eye tracking project Team 
+# Custom FaceMesh - Implementation 
 
-1.donwload and install node.js 
+1.Download and install node.js 
 
 2. clone this repo
 
