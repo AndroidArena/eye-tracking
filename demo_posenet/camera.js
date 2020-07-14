@@ -335,9 +335,16 @@ let rightelbow_x= JSON.stringify(keypoints[8]["position"]["x"]);
 let rightelbow_y= JSON.stringify(keypoints[8]["position"]["y"]);
 
 
-let finalvalues = rightshoulder_part +"<br>"+ "X:: "+rightshoulder_x +"<br>"+" Y :: "+
-rightshoulder_y +"<br><br>"+ leftshoulder_part +
- "<br>"+ "X:: "+leftshoulder_x +"<br>"+"Y :: "+ leftshoulder_y
+
+let finalvalues = leftelbow_part +"<br>"+ "X:: "+leftelbow_x +"<br>"+" Y :: "+
+leftelbow_y +"<br><br>"+ rightelbow_part +
+ "<br>"+ "X:: "+rightelbow_x +"<br>"+"Y :: "+ rightelbow_y
+
+
+
+// let finalvalues = rightshoulder_part +"<br>"+ "X:: "+rightshoulder_x +"<br>"+" Y :: "+
+// rightshoulder_y +"<br><br>"+ leftshoulder_part +
+//  "<br>"+ "X:: "+leftshoulder_x +"<br>"+"Y :: "+ leftshoulder_y
 
 
 // let finalvalues = leftear_part +"<br>"+ "X:: "+leftear_x +"<br>"+" Y :: "+
@@ -410,48 +417,49 @@ if (isperf==false&& (rightwrist_x > 300 && rightwrist_x<400 && rightwrist_y >200
    }
    }
 
-   //moving head left
-if (isperf==false && (leftear_x <170 && leftear_y>250)  ) {
-  isperf =true;
-  
-
-    //count=0
-    document.getElementById('mydiv').innerHTML =  "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "Moving head to left " + count+ "</div>";
-  
-   }
-   //moving head right
-   if (isperf==false && (rightear_x >360 && rightear_y>260)  ) {
-    isperf =true;
-    
-  
-      //count=0
-      document.getElementById('mydiv').innerHTML =  "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "Moving head to right " + count+ "</div>";
-    
-     }
-
-
-      //moving both shoulder left + right = both
-     if ((isperf==false) && (rightshoulder_y < 420 &&  rightshoulder_x <420)&&(leftshoulder_x > 120 &&  leftshoulder_y < 450) ) {
-      isperf =true;
-      document.getElementById('mydiv').innerHTML =  "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "Moving both shoulder" + "</div>";
-     }
-
+ 
+ 
     
      // moving right shoulder
-     if ((isperf==false) && rightshoulder_y < 420 &&  rightshoulder_x <450 ) {
+     if ((isperf==false) && rightshoulder_y < 420 &&  rightshoulder_x <420 && leftelbow_x>400 && leftelbow_y<450 ) {
       isperf =true;
-      document.getElementById('mydiv').innerHTML =  "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "Moving Right shoulder" + "</div>";
+
+      document.getElementById('mydiv').innerHTML =  "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "Moving left shoulder Streching" + "</div>";
      }
 
        // moving left shoulder
 
-       if ((isperf==false) && leftshoulder_x > 120 &&  leftshoulder_y < 450 ) {
+       if ((isperf==false) && leftshoulder_x > 120 &&  leftshoulder_y < 450 && rightelbow_x<10 && rightelbow_y<500) {
         isperf =true;
-        document.getElementById('mydiv').innerHTML =  "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "Moving left shoulder" + "</div>";
+        document.getElementById('mydiv').innerHTML =  "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "Moving right shoulder Streching" + "</div>";
        }
 
-     
-
+          //moving both shoulder left + right = both
+          if ((isperf==false) && (rightshoulder_y < 420 &&  rightshoulder_x <420)&&(leftshoulder_x > 120 &&  leftshoulder_y < 450) ) {
+            isperf =true;
+            document.getElementById('mydiv').innerHTML =  "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "Moving both shoulder" + "</div>";
+           }
+      
+  //moving head left
+  if (isperf==false && (leftear_x <170 && leftear_y>250)  ) {
+    isperf =true;
+    
+  
+      //count=0
+      document.getElementById('mydiv').innerHTML =  "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "Moving head to left " + count+ "</div>";
+    
+     }
+     //moving head right
+     if (isperf==false && (rightear_x >360 && rightear_y>260)  ) {
+      isperf =true;
+      
+    
+        //count=0
+        document.getElementById('mydiv').innerHTML =  "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "Moving head to right " + count+ "</div>";
+      
+       }
+  
+  
 
 
  //normal
