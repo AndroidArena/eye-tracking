@@ -285,6 +285,7 @@ function setupFPS() {
 
 var i,data;
 let count =0;
+let count_cup=0
 function setpose(keypoints){
 
 // for (i = 0; i < keypoints.length; i++) {
@@ -292,6 +293,13 @@ function setpose(keypoints){
 //   data += keypoints[i]["position"]["y"] + "<br>";
 // }
 data =JSON.stringify(keypoints);
+
+
+//left eye
+let lefteye_part = JSON.stringify(keypoints[1]["part"]);
+let lefteye_x = JSON.stringify(keypoints[1]["position"]["x"]);
+let lefteye_y = JSON.stringify(keypoints[1]["position"]["y"]);
+
 
 //left Ear
 let leftear_part = JSON.stringify(keypoints[3]["part"]);
@@ -335,10 +343,12 @@ let rightelbow_x= JSON.stringify(keypoints[8]["position"]["x"]);
 let rightelbow_y= JSON.stringify(keypoints[8]["position"]["y"]);
 
 
+let finalvalues = lefteye_part +"<br>"+ "X:: "+lefteye_x +"<br>"+" Y :: "+
+lefteye_y 
 
-let finalvalues = leftelbow_part +"<br>"+ "X:: "+leftelbow_x +"<br>"+" Y :: "+
-leftelbow_y +"<br><br>"+ rightelbow_part +
- "<br>"+ "X:: "+rightelbow_x +"<br>"+"Y :: "+ rightelbow_y
+// let finalvalues = leftelbow_part +"<br>"+ "X:: "+leftelbow_x +"<br>"+" Y :: "+
+// leftelbow_y +"<br><br>"+ rightelbow_part +
+//  "<br>"+ "X:: "+rightelbow_x +"<br>"+"Y :: "+ rightelbow_y
 
 
 
@@ -358,9 +368,10 @@ leftelbow_y +"<br><br>"+ rightelbow_part +
 //  +"<br><br>"+ 
 //  leftwrist_part +"<br>"+ "X:: "+leftwrist_x +"<br>"+"Y :: "+ leftwrist_y
 
-// let finalvalues = rightshoulder_part +"<br>"+ "X:: "+rightshoulder_x +"<br>"+" Y :: "+rightshoulder_y 
+// let finalvalues =  leftwrist_part +"<br>"+ "X:: "+leftwrist_x +"<br>"+"Y :: "+ leftwrist_y
+// //rightshoulder_part +"<br>"+ "X:: "+rightshoulder_x +"<br>"+" Y :: "+rightshoulder_y 
 //      +"<br><br>"+ 
-//      rightelbow_part +"<br>"+ "X:: "+rightelbow_x +"<br>"+"Y :: "+ rightelbow_y
+//     // rightelbow_part +"<br>"+ "X:: "+rightelbow_x +"<br>"+"Y :: "+ rightelbow_y
 //  +"<br><br>"+ 
 //  rightwrist_part +"<br>"+ "X:: "+rightwrist_x +"<br>"+"Y :: "+ rightwrist_y
 
@@ -370,10 +381,22 @@ leftelbow_y +"<br><br>"+ rightelbow_part +
 
  //result
 
- //Body building
+
  var isperf = false;
 //document.getElementById('mydiv').innerHTML = "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + isperf + "</div>";
 
+//looking down
+if ((isperf==false) && lefteye_y > 280 ) {
+  isperf =true;
+  document.getElementById('mydiv').innerHTML =  "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "looking Down" + "</div>";
+ }
+
+ //looking up
+ if ((isperf==false) && lefteye_y < 200 ) {
+  isperf =true;
+  document.getElementById('mydiv').innerHTML =  "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "looking Up" + "</div>";
+ }
+ //Body building
  if ((isperf==false) && leftshoulder_y < 450 && leftelbow_y < 450 && leftwrist_y <300 ) {
   isperf =true;
   count=0
@@ -458,8 +481,21 @@ if (isperf==false&& (rightwrist_x > 300 && rightwrist_x<400 && rightwrist_y >200
         document.getElementById('mydiv').innerHTML =  "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "Moving head to right " + count+ "</div>";
       
        }
-  
-  
+    //holding zomething
+    if (isperf==false &&( leftwrist_x >100 )|| (rightwrist_x<400 && rightwrist_y>400)) {
+      isperf =true;
+      count_cup +=1
+        document.getElementById('mydiv').innerHTML =  "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "holding something "+ "</div>";
+      
+       }
+       
+         //holding cup
+    if (isperf==false && rightwrist_x<400 && rightwrist_y<250  ) {
+      isperf =true;
+      count_cup +=1
+        document.getElementById('mydiv').innerHTML =  "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "scarthing head "+ "</div>";
+      
+       }  
 
 
  //normal
