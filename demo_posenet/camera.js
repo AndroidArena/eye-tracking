@@ -391,11 +391,11 @@ if ((isperf==false) && lefteye_y > 280 ) {
   document.getElementById('mydiv').innerHTML =  "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "looking Down" + "</div>";
  }
 
- //looking up
- if ((isperf==false) && lefteye_y < 200 ) {
-  isperf =true;
-  document.getElementById('mydiv').innerHTML =  "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "looking Up" + "</div>";
- }
+//  //looking up
+//  if ((isperf==false) && lefteye_y < 200 ) {
+//   isperf =true;
+//   document.getElementById('mydiv').innerHTML =  "<div style=\"border: 2px dotted #a2a2a2; padding: 12px; border-radius: 8px; margin: 10px;\">" + "looking Up" + "</div>";
+//  }
  //Body building
  if ((isperf==false) && leftshoulder_y < 450 && leftelbow_y < 450 && leftwrist_y <300 ) {
   isperf =true;
